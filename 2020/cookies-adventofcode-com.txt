@@ -1,0 +1,3 @@
+# Netscape HTTP Cookie File
+
+.adventofcode.com	TRUE	/	TRUE	1922275403	session	53616c7465645f5f5fa7a75d44ab94d8bcd0ffec5269c2c5d53e88620ee5f8020ec894782204dc46760c22e4293abcbc

@@ -1,0 +1,14 @@
+import sys
+import re
+import functools
+import copy
+import numpy as np
+
+# http://adventofcode.com/2020/day/15
+
+data = [int(x) for x in input().split(",")]
+print(data)
+
+visited = {num : index for index, num in enumerate(data)}
+print(visited)
+while True:
