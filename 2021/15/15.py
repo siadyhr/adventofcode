@@ -15,7 +15,7 @@ def get_neighbours(i, j):
             ):
             yield (i + di, j + dj)
 
-def explore(i0, j0):
+def explore(i0, j0, danger):
     least_dangerous = [[float('infinity') for _ in range(WIDTH)]
             for __ in range(HEIGHT)]
     least_dangerous[0][0] = 0
@@ -53,4 +53,15 @@ def explore(i0, j0):
 #print()
 #for line in danger:
 #    print("".join("%4d" % x for x in line))
-print(explore(0, 0)[WIDTH-1][HEIGHT-1])
+print(explore(0, 0, danger)[WIDTH-1][HEIGHT-1])
+
+danger2 = [[0 for _ in range(WIDTH*5)] for __ in range(HEIGHT*5)]
+for i in range(HEIGHT*5):
+    for j in range(WIDTH*5):
+        danger2[i][j] = 1 + (
+                danger[i%HEIGHT][j%WIDTH] + i//HEIGHT + j//WIDTH - 1) % 9
+
+
+WIDTH *= 5
+HEIGHT *= 5
+print(explore(0, 0, danger2)[WIDTH-1][HEIGHT-1])
