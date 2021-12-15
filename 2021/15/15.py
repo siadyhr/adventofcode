@@ -5,10 +5,6 @@ danger = [[int(x) for x in line[:-1]] for line in sys.stdin]
 WIDTH = len(danger[0])
 HEIGHT = len(danger)
 
-least_dangerous = [[float('infinity') for _ in range(WIDTH)]
-        for __ in range(HEIGHT)]
-least_dangerous[0][0] = 0
-
 def get_neighbours(i, j):
     directions = ((-1, 0), (0, 1), (1, 0), (0, -1))
     for di, dj in directions:
@@ -20,6 +16,10 @@ def get_neighbours(i, j):
             yield (i + di, j + dj)
 
 def explore(i0, j0):
+    least_dangerous = [[float('infinity') for _ in range(WIDTH)]
+            for __ in range(HEIGHT)]
+    least_dangerous[0][0] = 0
+
     stack = deque()
     stack.append((i0, j0))
     while stack:
@@ -45,12 +45,12 @@ def explore(i0, j0):
                 if neighbour != (WIDTH-1, HEIGHT-1):
                     stack.appendleft(neighbour)
 #                    stack.extendleft(get_neighbours(*neighbour))
+    return least_dangerous
 
-explore(0, 0)
-for line in least_dangerous:
-    print("".join("%4d" % x for x in line))
+#for line in least_dangerous:
+#    print("".join("%4d" % x for x in line))
 
-print()
-for line in danger:
-    print("".join("%4d" % x for x in line))
-print(least_dangerous[WIDTH-1][HEIGHT-1])
+#print()
+#for line in danger:
+#    print("".join("%4d" % x for x in line))
+print(explore(0, 0)[WIDTH-1][HEIGHT-1])
