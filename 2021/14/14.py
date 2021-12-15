@@ -14,7 +14,7 @@ def part2(start, rules, n):
     return result
 
 
-@lru_cache()
+@lru_cache(maxsize=None)
 def recursive_polymerization(pair, n):
     if n == 1:
         return Counter(pair[0] + rules[pair])
@@ -54,7 +54,7 @@ print(judge(polymer))
 
 print("Part 2")
 t0 = time()
-counter = part2(initial_polymer, rules, 10)
+counter = part2(initial_polymer, rules, 40)
 t1 = time()
 print(judge2(counter))
 print(t1-t0)
