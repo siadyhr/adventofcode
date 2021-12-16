@@ -1,3 +1,4 @@
+from math import prod
 hex_input = input()
 bin_input = "".join("{:0>4}".format(bin(int(x, 16))[2:]) for x in hex_input )
 print(len(bin_input))
@@ -60,5 +61,44 @@ def get_version_sum(data):
             result += get_version_sum(packet[2])
 
     return result
+
+def parse(packet, depth=0):
+    print(">"*depth, packet[1])
+    if type(packet[2]) is int:
+        return packet[2]
+
+    print(len(packet[2]))
+
+    def gt(gen):
+        a, b = gen
+        return 1 if a > b else 0
+    def lt(gen):
+        a, b = gen
+        return 1 if a < b else 0
+    def eq(gen):
+        a, b = gen
+        return 1 if a == b else 0
+    def get(gen):
+        for x in gen:
+            return x
+
+    function = {
+        0 : sum,
+        1 : prod,
+        2 : min,
+        3 : max,
+        4 : get,
+        5 : gt,
+        6 : lt,
+        7 : eq
+    }
+
+    operator_type = packet[1]
+    return function[operator_type](parse(sub_packet, depth+1) for sub_packet in packet[2])
+
 translation = translate(bin_input)[0]
+print("Sum:")
 print(get_version_sum(translation))
+print(translation)
+print("Parse:")
+print(parse(translation[0]))
