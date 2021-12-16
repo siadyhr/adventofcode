@@ -52,4 +52,13 @@ def translate(transmission, amount=float('infinity'), length=None, depth=0):
 
     return translated, i
 
-print(translate(bin_input)[0])
+def get_version_sum(data):
+    result = 0
+    for packet in data:
+        result += packet[0]
+        if type(packet[2]) is not int:
+            result += get_version_sum(packet[2])
+
+    return result
+translation = translate(bin_input)[0]
+print(get_version_sum(translation))
