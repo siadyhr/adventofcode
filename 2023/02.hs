@@ -56,9 +56,22 @@ gameId s = read idString
     where   gameString = (split ':' s)!!0
             idString = (split ' ' gameString)!!1
 
+listMax :: [Int] -> [Int] -> [Int]
+listMax a b = [max x y | (x, y) <- zip a b]
+
 part1 :: [String] -> Int
 part1 l = sum [gameId line | line <- l, validateRawGame line [12,13,14]]
 
+rawGameProduct :: String -> Int
+rawGameProduct rawGame = product gameMinimizer
+    where
+        gameMinimizer = foldl listMax [0, 0, 0] game
+        game = rawToGames (tail ((split ':' rawGame)!!1))
+
+part2 :: [String] -> Int
+part2 input = sum (map rawGameProduct input)
+
 main = do
-    rawInput <- (readLines "02.in")
+    rawInput <- (readLines "02sample.in")
     putStrLn (show (part1 rawInput))
+    putStrLn (show (part2 rawInput))
