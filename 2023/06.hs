@@ -32,8 +32,8 @@ listToRaces [x, y] = zip x y
 -- The tricky/annoying part is counting
 -- the integer points.
 
-intsInParabolaCap:: (Int, Int) -> Int
-intsInParabolaCap (duration, height)
+intsInParabolaCapDumb:: (Int, Int) -> Int
+intsInParabolaCapDumb (duration, height)
     | even duration = evenResult
     | odd  duration = oddResult
     where
@@ -50,6 +50,27 @@ intsInParabolaCap (duration, height)
         width       = sqrt (x^2 - 4*y)
         x           = fromIntegral duration
         y           = fromIntegral height
+
+-- Smarter solution. Calculate the two roots
+-- r1 <= r2. The first integer point contained
+-- in [r1, r2] is ceiling(r1), the last is
+-- floor (r2), giving a total of
+--      floor(r2) - ceiling(r1) + 1
+-- integer points. Problem: If r1, r2 are integral?
+-- This only happens simultaneously, and we
+-- need to subtract two
+
+intsInParabolaCap :: (Int, Int) -> Int
+intsInParabolaCap (x0, y0)
+    | not endPointsIncluded = integralIntervalLength
+    | otherwise             = integralIntervalLength - 2
+    where
+        integralIntervalLength = floor r2 - ceiling r1 + 1
+        r1 = (x/2) - sqrt(x^2 - 4*y)/2
+        r2 = (x/2) + sqrt(x^2 - 4*y)/2
+        x = fromIntegral x0
+        y = fromIntegral y0
+        endPointsIncluded   = (snd $ properFraction r1) == 0
 
 part1 :: [String] -> Int
 part1 s = product gameResults
