@@ -6,17 +6,16 @@ import Data.Map (Map)
 import qualified Data.Map as Map
 import MyAOCLib
 
-translateOnce :: [(Int, Int, Int)] -> Int -> Int
-translateOnce [] x = x
-translateOnce ((startOut, startIn, rangeLength):xs) x
-    |  xContained   = startOut + (x - startIn)
-    | otherwise     = translateOnce xs x
-    where
-        xContained = (startIn <= x) && (x < startIn + rangeLength)
 
 translate :: [[(Int, Int, Int)]] -> Int -> Int
 translate [] x = x
-translate (y:ys) x = translate ys (translateOnce y x)
+translate [[]] x = x
+translate [((startOut, startIn, rangeLength):xs)] x
+    | xContained    = startOut + (x - startIn)
+    | otherwise     = translate [xs] x
+    where
+        xContained = (startIn <= x) && (x < startIn + rangeLength)
+translate (y:ys) x = translate ys (translate [y] x)
 
 parse :: [String] -> ([Int], [[(Int, Int, Int)]])
 parse s = (seeds, maps)
