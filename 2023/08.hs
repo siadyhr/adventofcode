@@ -119,15 +119,30 @@ part2old s = findSuffixAndCount tree startLabels 'Z' directions
         (directions, tree) = parse s
         startLabels = findLabelsWithSuffix 'A' tree
 
-part2 :: [String] -> [(String, Int)]
-part2 s = getFirstMatching 'Z' tree startLabels directions
+{- It turns out the input is special. Let N be the length
+of the string of directions.
+* Starting at a label L_i = ..A_i:
+    * The first visit to a label ..Z_i will be after
+      M_i * N steps
+    * From then on, _every_ M_I * N steps we will return
+      to ..Z_i, and will not visit _any_ other label
+      of the type ..Z
+Conclusion:
+    * For every label L_i = ..A, find M_i * N
+    * The output will be lcm(M_i*N)
+-}
+
+part2 :: [String] -> Int
+part2 s = foldl lcm 1 firstZVisits
     where
+        firstZVisits = map snd firstZVisitsRaw
+        firstZVisitsRaw = map (\x -> findNextSuffixAndCount tree x 'Z' directions) startLabels
         startLabels = findLabelsWithSuffix 'A' tree
         (directions, tree) = parse s
 
 main = do
     rawInput <- (readLines "08.in")
     putStrLn "Hello, World!"
---    putStrLn $ show $ part1 rawInput
---    putStrLn $ show $ part2 rawInput
-    putStrLn $ show $ test (parse rawInput) (length (rawInput!!0))
+    putStrLn $ show $ part1 rawInput
+    putStrLn $ show $ part2 rawInput
+--    putStrLn $ show $ test (parse rawInput) (length (rawInput!!0))
