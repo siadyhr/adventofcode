@@ -77,10 +77,9 @@ takeUntil f (x:xs)
     | not $ f x = x:(takeUntil f xs)
     | otherwise = [x]
 
-part1 :: [String] -> Int
-part1 labyrinth = circuitLength `div` 2
+getCircuit :: [String] -> [(Char, (Int, Int))]
+getCircuit labyrinth = ('S', startCoord):circuit
     where
-        circuitLength = 1 + length circuit
         circuit = takeUntil (\x -> fst x == 'S') navigation
         navigation = navigate labyrinth firstStepCoords fromDirection
         -- startNeighbours = [(direction, symbol)]
@@ -89,6 +88,13 @@ part1 labyrinth = circuitLength `div` 2
         firstDirection = fst $ startNeighbours!!0
         startNeighbours = getNeighbours labyrinth startCoord
         startCoord = findStartCoordinate labyrinth
+
+
+part1 :: [String] -> Int
+part1 labyrinth = circuitLength `div` 2
+    where
+        circuitLength = 1 + length circuit
+        circuit = getCircuit labyrinth
         
 main = do
     rawInput <- (readLines "10.in")
