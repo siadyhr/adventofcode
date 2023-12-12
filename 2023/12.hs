@@ -44,11 +44,26 @@ countSpringConfigurations (x:xs, instruction:instructions)
     | x == '?'      = (countSpringConfigurations ('.':xs, instruction:instructions))
                         + (countSpringConfigurations ('#':xs, instruction:instructions))
 
-part1 l = sum $ map countSpringConfigurations (parse l)
+part1 l = sum $ map countSpringConfigurations l
+
+multiplyInput :: [(String, [Int])] -> [(String, [Int])]
+multiplyInput lines = map multiplyInputLine lines
+    where
+        multiplyInputLine (xs, instructions) = (repeatXs, repeatInstructions)
+            where
+                repeatXs = tail $ foldl (++) "" (take 5 $ repeat ('?':xs))
+                repeatInstructions = foldl (++) [] (take 5 $ repeat instructions)
+                
+
+part2 = part1 . multiplyInput
 
 main = do
-    rawInput <- (readLines "12sample.in")
-    putStrLn "Hello, World!"
-    putStrLn $ show $ part1 $ rawInput
+    rawSampleInput <- (readLines "12sample.in")
     rawInput <- (readLines "12.in")
-    putStrLn $ show $ part1 $ rawInput
+
+    putStrLn "Hello, World!"
+    putStrLn $ show $ part1 $ parse $ rawSampleInput
+    putStrLn $ show $ part1 $ parse $ rawInput
+    putStrLn "Part 2"
+    putStrLn $ show $ part2 $ parse $ rawSampleInput
+    putStrLn $ show $ part2 $ parse $ rawInput
