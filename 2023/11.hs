@@ -37,20 +37,20 @@ getEmptyCols = getEmptyRows . transpose
 getEmpties :: [String] -> ([Int], [Int])
 getEmpties matrix = (getEmptyRows matrix, getEmptyCols matrix)
 
-getEmptyCumsum' :: (Eq a) => a -> Int -> [[a]] -> [Int]
-getEmptyCumsum' _ _ [] = []
-getEmptyCumsum' emptyChar acc (line:lines)
+getEmptyCumsum' :: (Eq a) => a -> Int -> Int -> [[a]] -> [Int]
+getEmptyCumsum' _ _ _ [] = []
+getEmptyCumsum' emptyChar acc expansionFactor (line:lines)
     | emptyRow  = newAcc:rest
     | otherwise = acc:rest
     where
         newAcc
-            | emptyRow  = acc+1
+            | emptyRow  = acc+expansionFactor
             | otherwise = acc
         emptyRow = all (==emptyChar) line
-        rest = getEmptyCumsum' emptyChar newAcc lines
+        rest = getEmptyCumsum' emptyChar newAcc expansionFactor lines
 
 getEmptyCumsum = getEmptyCumsum' '.' 0
-getEmptiesCumsum matrix = (getEmptyCumsum matrix, getEmptyCumsum $ transpose matrix)
+getEmptiesCumsum expansionFactor matrix = (getEmptyCumsum expansionFactor matrix, getEmptyCumsum expansionFactor $ transpose matrix)
 
 addExpansion :: [Int] -> [Int] -> [Int]
 addExpansion expansion coordinates = expanded
@@ -79,15 +79,25 @@ listSum :: (Num a) => [a] -> [a] -> [a]
 listSum [] [] = []
 listSum (x:xs) (y:ys) = (x+y):(listSum xs ys)
 
-part1 :: [String] -> Int
-part1 matrix = (fst distances) + (snd distances)
+getExpansionSum :: Int -> [String] -> Int
+getExpansionSum expansionFactor matrix = (fst distances) + (snd distances)
     where
         distances = pairMap pairDifferences expandedCoordinates
         expandedCoordinates = (addExpansion (fst expansion) (fst rawCoordinates), addExpansion (snd expansion) (snd rawCoordinates))
-        expansion = getEmptiesCumsum matrix
+        expansion = getEmptiesCumsum expansionFactor matrix
         rawCoordinates = unzip $ findSymbols '#' matrix
+
+part1 = getExpansionSum 1
+part2 = getExpansionSum (1000000-1)
+
+{- expansionFactor:
+ - Part 1: 1 (1 space -> 1+1 spaces
+ - Part 2: 1000000-1.
+ - Part 2 samples: 9 (1030), 99 (8410)
+-}
 
 main = do
     rawInput <- (readLines "11.in")
     putStrLn "Hello, World!"
     putStrLn $ show $ part1 rawInput
+    putStrLn $ show $ part2 rawInput
