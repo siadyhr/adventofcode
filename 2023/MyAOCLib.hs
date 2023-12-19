@@ -48,3 +48,8 @@ transpose matrix
     | (length $ head matrix) == 1   = [[x | [x] <- matrix]]
     | otherwise = (map head matrix):(transpose $ map tail matrix)
 
+countOccurences :: (Eq a) => a -> [a] -> Int
+countOccurences _ [] = 0
+countOccurences a (x:xs)
+    | a==x      = 1 + countOccurences a xs
+    | otherwise = countOccurences a xs
