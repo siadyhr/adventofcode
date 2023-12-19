@@ -21,7 +21,10 @@ tiltRight matrix = map tiltRightRow matrix
             | x == '.'              = '.':(tiltRightRow (y:xs))
             | x == 'O' && y == '.'  = '.':'O':tiltRightRow xs
 
--- Calculates the weight after tilting _up_
+{- Calculates the weight after tilting _up_
+ - We transpose the matrix so we can tilt
+ - the board row-wise (towards the head)
+ -}
 calculateTiltedLoad :: [String] -> Int
 calculateTiltedLoad matrix = sum $ map calculateTiltedLoadRow (transpose matrix)
     where
